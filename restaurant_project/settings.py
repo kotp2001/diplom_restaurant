@@ -4,6 +4,7 @@ Django settings for restaurant_project project.
 
 import os
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,15 +13,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-+x5!v4i%^8&j5@9n!q2w3e4r5t6y7u8i9o0p1q2w3e4r5t6y7u8i9o0p1')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
-# Настройка разрешенных хостов - ЗАМЕНИ username НА СВОЙ
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-    '.pythonanywhere.com',
-    'твой-username.pythonanywhere.com',  # ЗАМЕНИ ЭТО!
-]
+# Настройка разрешенных хостов
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
+# Render.com hostname
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
 INSTALLED_APPS = [
@@ -71,12 +72,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'restaurant_project.wsgi.application'
 
 # Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Настройка для Render (PostgreSQL) и локально (SQLite)
+if 'RENDER' in os.environ:
+    # На Render используем PostgreSQL
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600,
+            ssl_require=True
+        )
     }
-}
+else:
+    # Локально используем SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
