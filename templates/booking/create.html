@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="bi bi-calendar-plus me-2"></i>
+                    Бронирование стола
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Стол</label>
+                        <select name="table_id" id="table_select" class="form-select" required>
+                            <option value="">Выберите стол</option>
+                            {% for table in tables %}
+                            <option value="{{ table.id }}" {% if table.id|stringformat:"s" == selected_table %}selected{% endif %}>
+                                Стол №{{ table.number }} ({{ table.seats }} мест)
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Дата</label>
+                            <input type="date" name="date" class="form-control" 
+                                   value="{{ selected_date }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Время</label>
+                            <select name="time" class="form-select" required>
+                                <option value="">Выберите время</option>
+                                <option value="08:00" {% if selected_time == '08:00' %}selected{% endif %}>8:00</option>
+                                <option value="09:00" {% if selected_time == '09:00' %}selected{% endif %}>9:00</option>
+                                <option value="10:00" {% if selected_time == '10:00' %}selected{% endif %}>10:00</option>
+                                <option value="11:00" {% if selected_time == '11:00' %}selected{% endif %}>11:00</option>
+                                <option value="12:00" {% if selected_time == '12:00' %}selected{% endif %}>12:00</option>
+                                <option value="13:00" {% if selected_time == '13:00' %}selected{% endif %}>13:00</option>
+                                <option value="14:00" {% if selected_time == '14:00' %}selected{% endif %}>14:00</option>
+                                <option value="15:00" {% if selected_time == '15:00' %}selected{% endif %}>15:00</option>
+                                <option value="16:00" {% if selected_time == '16:00' %}selected{% endif %}>16:00</option>
+                                <option value="17:00" {% if selected_time == '17:00' %}selected{% endif %}>17:00</option>
+                                <option value="18:00" {% if selected_time == '18:00' %}selected{% endif %}>18:00</option>
+                                <option value="19:00" {% if selected_time == '19:00' %}selected{% endif %}>19:00</option>
+                                <option value="20:00" {% if selected_time == '20:00' %}selected{% endif %}>20:00</option>
+                                <option value="21:00" {% if selected_time == '21:00' %}selected{% endif %}>21:00</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Количество гостей</label>
+                        <input type="number" name="guests_count" id="guests_count" class="form-control" min="1" value="2" required>
+                        <small id="seats_hint" class="text-muted"></small>
+                        <small id="seats_error" class="text-danger" style="display: none;">Превышает вместимость стола!</small>
+                    </div>
+                    
+                    <hr>
+                    <h5>Данные гостя</h5>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Имя гостя</label>
+                        <input type="text" name="guest_name" class="form-control" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Телефон</label>
+                        <div class="input-group">
+                            <span class="input-group-text">+7</span>
+                            <input type="tel" name="guest_phone" class="form-control" 
+                                   placeholder="(XXX) XXX-XX-XX" required>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i> Забронировать
+                        </button>
+                        <a href="{% url 'booking_calendar' %}" class="btn btn-outline-secondary">
+                            Отмена
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Проверка количества гостей
+const tableSelect = document.getElementById('table_select');
+const guestsInput = document.getElementById('guests_count');
+const seatsHint = document.getElementById('seats_hint');
+const seatsError = document.getElementById('seats_error');
+const submitBtn = document.querySelector('button[type="submit"]');
+
+function updateSeatsInfo() {
+    const selectedOption = tableSelect.options[tableSelect.selectedIndex];
+    if (selectedOption.value) {
+        const text = selectedOption.text;
+        const match = text.match(/\((\d+) мест/);
+        if (match) {
+            const maxSeats = parseInt(match[1]);
+            const currentGuests = parseInt(guestsInput.value) || 0;
+            
+            seatsHint.textContent = 'Максимум ' + maxSeats + ' человек';
+            guestsInput.max = maxSeats;
+            
+            if (currentGuests > maxSeats) {
+                seatsError.style.display = 'inline';
+                submitBtn.disabled = true;
+            } else {
+                seatsError.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        }
+    }
+}
+
+tableSelect.addEventListener('change', updateSeatsInfo);
+guestsInput.addEventListener('input', updateSeatsInfo);
+
+// Маска для телефона
+document.querySelector('input[name="guest_phone"]').addEventListener('input', function(e) {
+    let x = e.target.value.replace(/\D/g, '').substring(0, 10);
+    let formatted = '';
+    
+    if (x.length > 0) {
+        formatted += '(' + x.substring(0, 3);
+    }
+    if (x.length >= 4) {
+        formatted += ') ' + x.substring(3, 6);
+    }
+    if (x.length >= 7) {
+        formatted += '-' + x.substring(6, 8);
+    }
+    if (x.length >= 9) {
+        formatted += '-' + x.substring(8, 10);
+    }
+    
+    e.target.value = formatted;
+});
+
+// Защита от повторной отправки
+document.querySelector('form').addEventListener('submit', function(e) {
+    const btn = this.querySelector('button[type="submit"]');
+    if (!btn.disabled) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Отправка...';
+    }
+});
+
+// Запускаем проверку при загрузке
+setTimeout(updateSeatsInfo, 100);
+</script>
+{% endblock %}

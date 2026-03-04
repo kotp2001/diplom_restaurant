@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 text-center">
+        <h1>Добро пожаловать в АИС Общепит</h1>
+        <p class="lead">Система автоматизации ресторана</p>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div class="display-1 mb-3">👥</div>
+                <h5 class="card-title">Посетителям</h5>
+                <p class="card-text">Посмотреть меню и забронировать стол</p>
+                <a href="{% url 'public_menu' %}" class="btn btn-primary">Меню</a>
+                <a href="{% url 'booking_calendar' %}" class="btn btn-success mt-2">Бронирование</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div class="display-1 mb-3">👨‍🍳</div>
+                <h5 class="card-title">Официант</h5>
+                <p class="card-text">Работа с заказами и столами</p>
+                <a href="{% url 'waiter_login' %}" class="btn btn-primary">Вход</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div class="display-1 mb-3">👨‍🍳</div>
+                <h5 class="card-title">Повар</h5>
+                <p class="card-text">Просмотр заказов на кухне</p>
+                <a href="{% url 'chef_login' %}" class="btn btn-warning">Вход</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div class="display-1 mb-3">👨‍💼</div>
+                <h5 class="card-title">Администратор</h5>
+                <p class="card-text">Управление и отчеты</p>
+                <a href="{% url 'dashboard' %}" class="btn btn-success">Отчеты</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-12">
+        <div class="alert alert-info text-center">
+            <strong>Дипломный проект:</strong> Разработка и сопровождение АИС "Общепит"
+        </div>
+    </div>
+</div>
+{% endblock %}

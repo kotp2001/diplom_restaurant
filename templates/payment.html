@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Оплата заказа - Стол №{{ order.table.number }}</h4>
+            </div>
+            <div class="card-body">
+                <h5>Сумма к оплате: <strong>{{ order.total_amount }} ₽</strong></h5>
+                
+                <form method="post" id="paymentForm">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Способ оплаты:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="payment_method" id="cash" value="cash" checked>
+                            <label class="form-check-label" for="cash">
+                                Наличные
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="payment_method" id="card" value="card">
+                            <label class="form-check-label" for="card">
+                                Банковская карта
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="payment_method" id="qr" value="qr">
+                            <label class="form-check-label" for="qr">
+                                QR-код (СБП)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3" id="cashInput" style="display: none;">
+                        <label for="cash_amount" class="form-label">Внесено наличными:</label>
+                        <input type="number" class="form-control" id="cash_amount" name="cash_amount" min="{{ order.total_amount }}" step="any">
+                        <div id="changeDisplay" class="mt-2"></div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">Подтвердить оплату</button>
+                        <a href="{% url 'order_detail' order.id %}" class="btn btn-secondary">Назад к заказу</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const cashRadio = document.getElementById('cash');
+    const cashInput = document.getElementById('cashInput');
+    const cashAmount = document.getElementById('cash_amount');
+    const changeDisplay = document.getElementById('changeDisplay');
+    const totalAmount = {{ order.total_amount }};
+    
+    function updateChange() {
+        if (cashRadio.checked && cashAmount.value) {
+            const paid = parseFloat(cashAmount.value) || 0;
+            const change = paid - totalAmount;
+            if (change >= 0) {
+                changeDisplay.innerHTML = `<div class="alert alert-success">Сдача: ${change.toFixed(2)} ₽</div>`;
+            } else {
+                changeDisplay.innerHTML = `<div class="alert alert-warning">Нужно ещё ${Math.abs(change).toFixed(2)} ₽</div>`;
+            }
+        }
+    }
+    
+    cashRadio.addEventListener('change', function() {
+        cashInput.style.display = this.checked ? 'block' : 'none';
+    });
+    
+    cashAmount.addEventListener('input', updateChange);
+    
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+        if (cashRadio.checked) {
+            const paid = parseFloat(cashAmount.value) || 0;
+            if (paid < totalAmount) {
+                e.preventDefault();
+                alert('Недостаточно средств!');
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

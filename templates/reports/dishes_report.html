@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>🍽️ Отчет по блюдам</h2>
+    <div>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Назад к дашборду</a>
+        <a href="{% url 'index' %}" class="btn btn-outline-dark">🏠 В главное меню</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Блюдо</th>
+                    <th>Категория</th>
+                    <th>Цена</th>
+                    <th>Продано (шт)</th>
+                    <th>Выручка</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dish in dishes %}
+                <tr>
+                    <td>{{ dish.name }}</td>
+                    <td>{{ dish.category.name }}</td>
+                    <td>{{ dish.price }} ₽</td>
+                    <td>{{ dish.total_sold|default:0 }}</td>
+                    <td>{{ dish.total_revenue|default:0 }} ₽</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">Нет данных</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
