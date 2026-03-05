@@ -1,0 +1,178 @@
+[
+  {
+    "model": "menu.category",
+    "pk": 1,
+    "fields": {
+      "name": "Горячее",
+      "order": 1
+    }
+  },
+  {
+    "model": "menu.category",
+    "pk": 2,
+    "fields": {
+      "name": "Салаты",
+      "order": 2
+    }
+  },
+  {
+    "model": "menu.category",
+    "pk": 3,
+    "fields": {
+      "name": "Десерты",
+      "order": 3
+    }
+  },
+  {
+    "model": "menu.category",
+    "pk": 4,
+    "fields": {
+      "name": "Напитки",
+      "order": 4
+    }
+  },
+  {
+    "model": "menu.dish",
+    "pk": 1,
+    "fields": {
+      "name": "Стейк Рибай",
+      "description": "Мраморная говядина с овощами гриль",
+      "price": "1890.00",
+      "category": 1,
+      "is_available": true,
+      "weight": 300
+    }
+  },
+  {
+    "model": "menu.dish",
+    "pk": 2,
+    "fields": {
+      "name": "Лосось на гриле",
+      "description": "Филе лосося со спаржей",
+      "price": "1250.00",
+      "category": 1,
+      "is_available": true,
+      "weight": 250
+    }
+  },
+  {
+    "model": "menu.dish",
+    "pk": 3,
+    "fields": {
+      "name": "Паста Карбонара",
+      "description": "Спагетти с беконом и пармезаном",
+      "price": "690.00",
+      "category": 1,
+      "is_available": true,
+      "weight": 320
+    }
+  },
+  {
+    "model": "menu.dish",
+    "pk": 4,
+    "fields": {
+      "name": "Том Ям",
+      "description": "Тайский суп с морепродуктами",
+      "price": "590.00",
+      "category": 1,
+      "is_available": true,
+      "weight": 350
+    }
+  },
+  {
+    "model": "menu.dish",
+    "pk": 5,
+    "fields": {
+      "name": "Цезарь",
+      "description": "С курицей и соусом Цезарь",
+      "price": "490.00",
+      "category": 2,
+      "is_available": true,
+      "weight": 250
+    }
+  },
+  {
+    "model": "menu.dish",
+    "pk": 6,
+    "fields": {
+      "name": "Греческий",
+      "description": "Свежие овощи с фетой",
+      "price": "420.00",
+      "category": 2,
+      "is_available": true,
+      "weight": 280
+    }
+  },
+  {
+    "model": "menu.dish",
+    "pk": 7,
+    "fields": {
+      "name": "Оливье",
+      "description": "Классический с курицей",
+      "price": "380.00",
+      "category": 2,
+      "is_available": true,
+      "weight": 300
+    }
+  },
+  {
+    "model": "menu.dish",
+    "pk": 8,
+    "fields": {
+      "name": "Тирамису",
+      "description": "Итальянский десерт с маскарпоне",
+      "price": "390.00",
+      "category": 3,
+      "is_available": true,
+      "weight": 150
+    }
+  },
+  {
+    "model": "menu.dish",
+    "pk": 9,
+    "fields": {
+      "name": "Чизкейк",
+      "description": "Нью-Йорк с ягодным соусом",
+      "price": "350.00",
+      "category": 3,
+      "is_available": true,
+      "weight": 140
+    }
+  },
+  {
+    "model": "menu.dish",
+    "pk": 10,
+    "fields": {
+      "name": "Латте",
+      "description": "Классический кофе с молоком",
+      "price": "250.00",
+      "category": 4,
+      "is_available": true,
+      "weight": 250
+    }
+  },
+  {
+    "model": "menu.dish",
+    "pk": 11,
+    "fields": {
+      "name": "Чай чёрный",
+      "description": "Цейлонский листовой",
+      "price": "150.00",
+      "category": 4,
+      "is_available": true,
+      "weight": 250
+    }
+  },
+  {
+    "model": "menu.dish",
+    "pk": 12,
+    "fields": {
+      "name": "Лимонад",
+      "description": "Домашний с мятой",
+      "price": "290.00",
+      "category": 4,
+      "is_available": true,
+      "weight": 300
+    }
+  }
+]
